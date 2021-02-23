@@ -42,10 +42,13 @@ public class VLVJndiClient {
         try {
             LdapContext ctx = getLdapContext(env, prop);
 
+            SearchControls ctl = new SearchControls();
+//            ctl.setReturningAttributes(new String[]{"uuid", "uid"});
+            ctl.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
             long t1 = System.currentTimeMillis();
             /* Perform search */
-            NamingEnumeration answer =
-                    ctx.search(prop.getProperty("base_dn"), prop.getProperty("search_filter"), null);
+            NamingEnumeration answer = ctx.search(prop.getProperty("base_dn"), prop.getProperty("search_filter"), ctl);
             long t2 = System.currentTimeMillis();
             System.out.println("== LDAP Search done: " + (t2 - t1) + "ms ==");
 
@@ -99,11 +102,11 @@ public class VLVJndiClient {
         LdapContext ctx = new InitialLdapContext(env, null);
 
         /* Query the server to see if the VLV Control is supported */
-        if (!isVLVControlSupported(ctx)) {
-            System.out.println(
-                    "The server does not support Virtual List View (VLV) Control.");
-            System.exit(1);
-        }
+//        if (!isVLVControlSupported(ctx)) {
+//            System.out.println(
+//                    "The server does not support Virtual List View (VLV) Control.");
+//            System.exit(1);
+//        }
 
         com.sun.jndi.ldap.ctl.SortKey sortKey;
         if(prop.getProperty("matching_rule_id") != null) {
