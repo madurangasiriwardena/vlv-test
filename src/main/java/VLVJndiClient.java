@@ -105,7 +105,12 @@ public class VLVJndiClient {
             System.exit(1);
         }
 
-        com.sun.jndi.ldap.ctl.SortKey sortKey = new com.sun.jndi.ldap.ctl.SortKey(prop.getProperty("sort_attribute"), true, "caseIgnoreIA5Match");
+        com.sun.jndi.ldap.ctl.SortKey sortKey;
+        if(prop.getProperty("matching_rule_id") != null) {
+            sortKey = new com.sun.jndi.ldap.ctl.SortKey(prop.getProperty("sort_attribute"), true, prop.getProperty("matching_rule_id"));
+        } else {
+            sortKey = new com.sun.jndi.ldap.ctl.SortKey(prop.getProperty("sort_attribute"));
+        }
 
         com.sun.jndi.ldap.ctl.SortKey[] sortKeys = new com.sun.jndi.ldap.ctl.SortKey[1];
         sortKeys[0] = sortKey;
